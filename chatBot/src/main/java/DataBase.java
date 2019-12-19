@@ -43,6 +43,7 @@ public class DataBase {
         } catch (IOException e) {
             File file = new File("DB.txt");
             file.createNewFile();
+            //e.printStackTrace();
         }
         return null;
     }

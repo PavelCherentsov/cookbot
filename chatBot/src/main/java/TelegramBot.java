@@ -6,25 +6,15 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-
 
 public class TelegramBot extends TelegramLongPollingBot{
-	static ChatBot bot;
-	public static TelegramBot Tbot;
-	public static ArrayList<Long> users = new ArrayList<>();
+	ChatBot bot;
 
 	public static void main(ChatBot bot) {
 		ApiContextInitializer.init();
 		TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
-		Tbot = new TelegramBot(bot);
 		try {
-			telegramBotsApi.registerBot(Tbot);
-			Thread t = new chreak();
-			t.start();
+			telegramBotsApi.registerBot(new TelegramBot(bot));
 		} catch (TelegramApiRequestException e) {
 			e.printStackTrace();
 		}
@@ -36,32 +26,6 @@ public class TelegramBot extends TelegramLongPollingBot{
 		this.bot = bot;
 	}
 
-	public static class chreak extends Thread{
-		@Override
-		public void run() {
-			while (true){
-				for (Long a : users) {
-					GregorianCalendar now = new GregorianCalendar();
-					if (now.compareTo(bot.thisdate) == 1 && bot.isRunTimer) {
-						SendMessage sendMessage = new SendMessage().setChatId(a);
-						bot.isRunTimer = false;
-						sendMessage.setText("Время вышло!");
-						try {
-							Tbot.execute(sendMessage);
-						} catch (TelegramApiException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
 	@Override
 	public String getBotUsername() {
 		return "OptimalCookBot";
@@ -71,10 +35,6 @@ public class TelegramBot extends TelegramLongPollingBot{
 	public void onUpdateReceived(Update update) {
 		String message = update.getMessage().getText();
 		String name = message.split(" ")[0].toLowerCase();
-		Long id = update.getMessage().getChatId();
-		if (!users.contains(id)){
-			users.add(id);
-		}
 		String arg = "";
 		if (message.length() >= 2)
 			arg = message.substring(message.indexOf(" ") + 1);

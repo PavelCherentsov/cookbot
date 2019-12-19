@@ -1,12 +1,11 @@
-TelegramBot.class
-Command.class
-ProgramResources_ru.class
-TelegramBot$chreak.class
 DataBase.class
 Program.class
 Parser.class
+Languages.class
+TelegramBot.class
 ChatBot.class
-Resepts.class
+Command.class
+ProgramResources_ru.class
 ProgramResources_en.class
 Food.class
 ProgramResources.class
