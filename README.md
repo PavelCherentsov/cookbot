@@ -13,3 +13,14 @@
 ===
 	integration with telegram
 	select language
+
+***
+4th:
+===
+	add Sqlite
+	choose ingredients
+***
+5th:
+===
+	add recipe
+	add timer
