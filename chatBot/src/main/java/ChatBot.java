@@ -19,6 +19,85 @@ public class ChatBot {
         return txt;
     }
 
+    public String getHolidayFood(String arg) { //also we can do Livenstein distance support
+        StringBuilder str = new StringBuilder();
+        ResourceBundle res = ResourceBundle.getBundle("ProgramResources", this.locale);
+        HashMap<String, ArrayList<Food>> holidayFood =
+                (HashMap<String, ArrayList<Food>>)res.getObject("hashM");
+        String targ = arg.split(" /")[0];
+        System.out.println(targ);
+        if (holidayFood.get(targ) == null) {
+            str.append(res.getString("avVar"));
+            int counter = 0;
+            for (String holiday : holidayFood.keySet()) {
+                if (holiday.contains(arg)) {
+                    str.append(holiday);
+                    str.append("\n");
+                    counter += 1;
+                }
+            }
+            str.append(res.getString("sum")).append(counter).append(res.getString("var"));
+        } else {
+            try {
+                Class.forName("org.sqlite.JDBC");
+                Connection con = DriverManager.getConnection(
+                        "jdbc:sqlite:food.db");
+                ArrayList<String> args = new ArrayList<>(
+                        Arrays.asList(arg.split(" /")));
+                ArrayList<Food> foods = holidayFood.get(args.get(0));
+                args.remove(0);
+                HashMap<String, Boolean> ings = new HashMap<>();
+                for (var argum : args) {
+                    name = "";
+                    if (locale.equals(new Locale("ru")))
+                        name = changeArg(argum.substring(1));
+                    else
+                        name = argum.substring(1);
+                    if(name.equals(""))
+                        continue;
+                    if (argum.substring(0, 1).equals("+"))
+                        ings.put(name, Boolean.TRUE);
+                    else
+                        ings.put(name, Boolean.FALSE);
+                }
+                for (var food : foods) {
+                    String name = food.name;
+                    String sql =  "SELECT * FROM food WHERE ru_name = '" + name + "' OR en_name = '" + name + "'";
+                    Statement stay = con.createStatement();
+                    ResultSet result = stay.executeQuery(sql);
+                    Boolean flag = Boolean.TRUE;
+                    while(result.next()) {
+                        for (var ned : ings.keySet()) {
+                            if (!ings.get(ned).equals(Boolean.valueOf(result.getString(ned))))
+                                flag = Boolean.FALSE;
+                        }
+                    }
+                    if (flag) {
+                        str.append(name);
+                        str.append('\n');
+                        str.append(getDescription(food));
+                        str.append('\n');
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return str.toString();
+    }
+
+    private String changeArg(String arg){
+        if (arg.equals("мясо"))
+            return "meat";
+        if (arg.equals("рыба"))
+            return "fish";
+        if (arg.equals("молоко"))
+            return "milk";
+        if (arg.equals("вегетарианский"))
+            return "vegetarian";
+        return "";
+    }
+
     public String getResept(String txt) {
         i_step = 0;
         return Resepts.init(txt);
