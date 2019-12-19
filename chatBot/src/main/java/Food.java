@@ -1,16 +1,9 @@
+import javax.imageio.IIOException;
 import java.io.IOException;
-import java.util.ArrayList;
 
-class Food {
+public class Food {
     public String name;
     public String description;
-    public ArrayList<String> steps = new ArrayList<>();
-    public ArrayList<String> engreds = new ArrayList<>();
-
-    Food(String name, String description) {
-        this.description = description;
-        this.name = name.replaceAll("&quot;","\"" );
-    }
 
     Food(String name) throws IOException {
         this.description = "";
@@ -20,4 +13,6 @@ class Food {
             this.description = food.description;
         }
     }
+
+    //public ArrayList<string> ingridients;
 }

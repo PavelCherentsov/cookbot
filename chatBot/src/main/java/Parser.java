@@ -12,7 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-    public static String getDescriptionFromInternet(String food, Locale locale){
+    public static String getDescriptionFromInternet(String food, Locale locale){ // if we have description then ok
+        // if we don't have then find it in wiki
         ResourceBundle res = ResourceBundle.getBundle("ProgramResources", locale);
         StringBuilder description = new StringBuilder();
         String page = getPageWithDescription(food, locale);
