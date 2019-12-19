@@ -20,7 +20,8 @@ public class Resepts {
                 ArrayList<String> sums = getParseElements(page_food, p, "</td>");
                 for (int i = 0; i < engred.size(); i++) {
                     String e = engred.get(0);
-                    engred.add(e.substring(23, e.length() - 1) + " " + sums.get(i + 3).substring(p.length() + 1));
+                    engred.add(e.substring(23, e.length() - 1) + " " + sums.get(i + 3).substring(p.length() + 1)
+                            .replace("&#189;", "1/2"));
                     engred.remove(0);
                 }
                 food.engreds = engred;
@@ -38,7 +39,12 @@ public class Resepts {
                 }
                 food.steps = steps;
             }
-            thisFood = foods.get(0);
+            try {
+                thisFood = foods.get(0);
+            }
+            catch (Exception e) {
+                return "К сожалению, я не могу найти рецепт " + name;
+            }
 
             return thisFood.name;
         } catch (IOException e) {

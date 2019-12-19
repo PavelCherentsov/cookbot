@@ -3,13 +3,14 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
+import java.sql.*;
 
 public class ChatBot {
     private String name;
     private String info = "Developed by Kirill and Nikolay\nversion: 0.2b";
     private boolean alive;
     private Locale locale = new Locale("en");
-    public GregorianCalendar thisdate;
+    public GregorianCalendar thisdate = new GregorianCalendar();
     public boolean isRunTimer;
     private int i_step = 0;
 
@@ -25,7 +26,6 @@ public class ChatBot {
         HashMap<String, ArrayList<Food>> holidayFood =
                 (HashMap<String, ArrayList<Food>>)res.getObject("hashM");
         String targ = arg.split(" /")[0];
-        System.out.println(targ);
         if (holidayFood.get(targ) == null) {
             str.append(res.getString("avVar"));
             int counter = 0;
@@ -41,7 +41,7 @@ public class ChatBot {
             try {
                 Class.forName("org.sqlite.JDBC");
                 Connection con = DriverManager.getConnection(
-                        "jdbc:sqlite:food.db");
+                        "jdbc:sqlite:C:\\Users\\1268547\\sqlite\\food.db");
                 ArrayList<String> args = new ArrayList<>(
                         Arrays.asList(arg.split(" /")));
                 ArrayList<Food> foods = holidayFood.get(args.get(0));
@@ -132,29 +132,6 @@ public class ChatBot {
         return result.toString();
     }
 
-    public String getHolidayFood(String arg) { //also we can do Livenstein distance support
-        StringBuilder str = new StringBuilder();
-        ResourceBundle res = ResourceBundle.getBundle("ProgramResources", this.locale);
-        HashMap<String, Food> holidayFood = (HashMap<String, Food>) res.getObject("hashM");
-        if (holidayFood.get(arg) == null) {
-            str.append(res.getString("avVar"));
-            int counter = 0;
-            for (String holiday : holidayFood.keySet()) {
-                if (holiday.contains(arg)) {
-                    str.append(holiday);
-                    str.append("\n");
-                    counter += 1;
-                }
-            }
-            str.append(res.getString("sum")).append(counter).append(res.getString("var"));
-        } else {
-            str.append(holidayFood.get(arg).name);
-            str.append('\n');
-            str.append(getDescription(holidayFood.get(arg)));
-        }
-        return str.toString();
-    }
-
     public String changeLanguage(String arg) {
         this.locale = (this.locale.equals(new Locale("en")))
                 ? new Locale("ru")
@@ -178,7 +155,6 @@ public class ChatBot {
     public String getIngredients(String txt) {
         String res = "";
         for (String e : Resepts.thisFood.engreds){
-            System.out.println(e);
             res += e + "\n";
         }
         return res;

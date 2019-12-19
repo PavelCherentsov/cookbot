@@ -18,7 +18,7 @@ public class Parser {
         String page = getPageWithDescription(food, locale);
         Pattern pattern = Pattern.compile("<p>.*?<b>.+?</p>");
         Matcher matcher = pattern.matcher(page);
-        if (!(matcher.find())){
+       if (!(matcher.find())){
             return res.getString("nfInf");
         }
         description.append(page.substring(matcher.start(), matcher.end())
@@ -26,6 +26,9 @@ public class Parser {
                 .replaceAll("&#91.*?#93;", "")
                 .replaceAll(".#.*?;", "")
                 .replaceAll("\\?+?", ""));
+        String desc = description.toString();
+        if (desc.length() > 1000)
+            description = new StringBuilder(desc.substring(0, 1000) + "...");
         description.append("\n");
         description.append(res.getString("findR"));
         food = URLEncoder.encode(food, StandardCharsets.UTF_8);
